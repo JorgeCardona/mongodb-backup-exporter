@@ -11,7 +11,7 @@ setuptools.setup(
     name="mongodb-backup-exporter",
     version=version,  # Use the dynamic version from the environment variable
     author="Jorge Cardona",
-    description=""A tool to export MongoDB collections to JSON or CSV files",
+    description="A tool to export MongoDB collections to JSON or CSV files",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jorgecardona/mongodb-backup-exporter",
