@@ -1,22 +1,20 @@
-from setuptools import setup, find_packages
 import os
+import setuptools
 
-# Dynamic version from the environment variable
-version = os.getenv('PACKAGE_VERSION', '0.0.1')
+with open("README.md", "r", encoding="utf-8") as file:
+    long_description = file.read()
 
-# Long description from README file
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+# Get version from environment variable or fallback to a default value
+version = os.getenv("PACKAGE_VERSION", "0.0.2")  # Default to '0.0.7' if not provided
 
-setup(
+setuptools.setup(
     name="mongodb-backup-exporter",
     version=version,  # Use the dynamic version from the environment variable
     author="Jorge Cardona",
-    description="A tool to export MongoDB collections to JSON or CSV files",
+    description=""A tool to export MongoDB collections to JSON or CSV files",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jorgecardona/mongodb-backup-exporter",
-    packages=find_packages(),  # Automatically find packages
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
