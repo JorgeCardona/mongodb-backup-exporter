@@ -58,7 +58,7 @@ pip install mongodb-backup-exporter
 To use the `MongoDBBackupExporter`, you can instantiate it in your script:
 
 ```python
-from mongodb_backup import MongoDBBackupExporter
+from mongodb_backup_exporter import MongoDBBackupExporter
 
 # Configuration for MongoDB connection
 username = "your_username"  # MongoDB username
