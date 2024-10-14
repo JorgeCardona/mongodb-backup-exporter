@@ -1,6 +1,7 @@
 # MongoDB Backup Exporter
-
 A utility for exporting MongoDB collections to JSON or CSV format.
+
+[![Publish MongoDB Backup Collections Exporter Python Package](https://github.com/JorgeCardona/mongodb-backup-exporter/actions/workflows/python-publish.yml/badge.svg)](https://github.com/JorgeCardona/mongodb-backup-exporter/actions/workflows/python-publish.yml)
 
 ## Features
 
@@ -8,6 +9,7 @@ A utility for exporting MongoDB collections to JSON or CSV format.
 - Automatically handles output directories.
 - Supports exporting all collections or specified ones.
 - Provides stats about each collection before exporting.
+- Supports pretty-printing of JSON output and exporting JSON in list format.
 
 ## Installation PyPI
 
@@ -75,7 +77,10 @@ exporter = MongoDBBackupExporter(
     db_name=db_name,  # The name of the database to be backed up
     mongoexport_path=mongoexport_path,  # Path to the mongoexport executable
     output_format='json',  # Specifies the format for the exported files; can be 'json' or 'csv'
+    json_list=True,  # If True, each JSON object will be written on a new line in list format
+    pretty_json=True,  # If True, the JSON output will be formatted for better readability
     output_dir='output_directory_path',  # Directory where output files will be saved; defaults to current working directory if None
+    collections_to_export=['collection1', 'collection2'],  # Specify collections to export; if None, all collections will be exported
 )
 
 # Execute the export process
@@ -93,6 +98,3 @@ exporter.execute_export()
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-```
-
-This version clearly specifies the installation steps for `mongoexport` on both Windows and Linux, making it easier for users to follow.

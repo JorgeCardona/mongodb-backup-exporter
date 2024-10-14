@@ -1,32 +1,49 @@
 import os
+import json
 import subprocess
 from pymongo import MongoClient
 
 class MongoDBBackupExporter:
-    def __init__(self, username, password, hostname, db_name, mongoexport_path, output_format=None, output_dir=None, collections_to_export=None):
+
+    def __init__(self, username, password, hostname, db_name, mongoexport_path, output_format=None, json_list=False, pretty_json=False, output_dir=None, collections_to_export=None):
         """
         Initializes the MongoDBBackupExporter with the necessary connection details and output format.
 
         Args:
-            username (str): The username for the MongoDB database.
-            password (str): The password for the MongoDB database.
-            hostname (str): The cluster address for the MongoDB connection.
-            db_name (str): The name of the database.
-            mongoexport_path (str): The path to the mongoexport executable.
-            output_format (str, optional): The format of the output files (either 'json' or 'csv'). Defaults to 'json'.
-            output_dir (str, optional): The directory where output files will be saved. 
-                                         If None, defaults to current working directory.
-            collections_to_export (list, optional): A list of collection names to export. 
-                                                    If None, all collections will be exported.
+            username (str): The username for authenticating with the MongoDB database.
+            password (str): The password for authenticating with the MongoDB database.
+            hostname (str): The hostname or IP address of the MongoDB server.
+            db_name (str): The name of the database to be exported.
+            mongoexport_path (str): The file path to the mongoexport executable used for exporting data.
+            output_format (str, optional): The format of the output files. Accepts 'json' or 'csv'. Defaults to 'json' if not specified.
+            json_list (bool, optional): If True, each JSON object will be written on a new line, creating a list format. Defaults to False.
+            pretty_json (bool, optional): If True, the JSON output will be formatted with indentation for better readability. Defaults to False.
+            output_dir (str, optional): The directory where output files will be saved. If None, defaults to a directory named after the database in the current working directory.
+            collections_to_export (list, optional): A list of collection names to be exported. If None, all collections in the database will be exported.
+
+        Attributes:
+            username (str): Stores the username for MongoDB.
+            password (str): Stores the password for MongoDB.
+            hostname (str): Stores the hostname of the MongoDB server.
+            db_name (str): Stores the name of the database.
+            output_format (str): Stores the output format ('json' or 'csv').
+            json_list (bool): Determines if the output should be in list format for JSON.
+            pretty_json (bool): Determines if the JSON output should be prettified.
+            mongoexport_path (str): Stores the path to the mongoexport executable.
+            output_dir (str): Stores the directory for saving exported files.
+            collections_to_export (list): Stores the list of collections to be exported.
         """
         self.username = username
         self.password = password
         self.hostname = hostname
         self.db_name = db_name
-        self.output_format = str(output_format).lower() if str(output_format).lower() in ['json','csv'] else 'json'
+        self.output_format = str(output_format).lower() if str(output_format).lower() in ['json', 'csv'] else 'json'
+        self.json_list = json_list
+        self.pretty_json = pretty_json
         self.mongoexport_path = mongoexport_path
         self.output_dir = output_dir or os.path.join(os.getcwd(), db_name)  # Use provided dir or default
         self.collections_to_export = collections_to_export
+
 
     def build_mongo_uri(self):
         """
@@ -65,6 +82,33 @@ class MongoDBBackupExporter:
         client.close()
         return collections
 
+ 
+    def write_json_file(self, json_data, output_file):
+        """
+        Writes JSON data to a file, either in a pretty format or as a list of JSON objects.
+
+        Args:
+            json_data (list): List of JSON objects to write to the file.
+            output_file (str): Path to the output file.
+        """
+        with open(output_file, 'w', encoding='utf-8') as file:
+            if self.pretty_json:
+                json.dump(json_data, file, indent=4)  # Pretty print with indentation
+                print(f"Pretty JSON output saved to {output_file}")
+            else:
+                # Write each JSON object on a new line in a list format
+                with open(output_file, 'w', encoding='utf-8') as file:
+                                file.write('[\n')
+                                for idx, doc in enumerate(json_data):
+                                    json.dump(doc, file)
+                                    if idx < len(json_data) - 1:
+                                        file.write(',\n')  # Add a comma between objects
+                                    else:
+                                        file.write('\n')
+                                file.write(']\n')
+                print(f"Regular JSON List output saved to {output_file}")
+
+
     def export_collection(self, collection_name):
         """
         Exports a specified collection from MongoDB to a file in the specified format.
@@ -72,10 +116,12 @@ class MongoDBBackupExporter:
         Args:
             collection_name (str): The name of the collection to export.
             
-        The function builds the mongoexport command based on the specified output format.
+        This function builds the mongoexport command based on the specified output format.
         If the output format is 'csv', it retrieves the field names from the first document
         in the collection and adds them to the command. The exported file is saved in the
         specified output directory with the collection name and appropriate file extension.
+        If the output format is 'json' and json_list is set to True, it processes each line
+        of the output as a separate JSON object.
         """
         output_file = os.path.join(self.output_dir, f"{collection_name}.{self.output_format}")
         
@@ -98,16 +144,25 @@ class MongoDBBackupExporter:
             # Retrieve field names from the first document
             fields = collection.find_one().keys()
             fields_list = ','.join(fields)  # Create a comma-separated string of fields
-            
             command += ["--fields", fields_list]
-
         try:
             subprocess.run(command, check=True)
             print(f"Export of collection '{collection_name}' completed: {output_file}")
+
+            if self.output_format == "json" and self.json_list:
+                with open(output_file, 'r', encoding='utf-8') as file:
+                    json_data = [json.loads(line) for line in file]  # Read each line as JSON
+
+                # Call the function to write the JSON data to the file
+                self.write_json_file(json_data, output_file)
+
         except subprocess.CalledProcessError as e:
             print(f"Error exporting collection '{collection_name}': {e}")
         finally:
             client.close()  # Ensure the connection is closed
+
+
+
 
 
     def export_all_collections(self):
