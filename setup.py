@@ -22,6 +22,6 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'pymongo==4.10.1',  # Include pymongo to be installed automatically
+        'pymongo',  # Include pymongo to be installed automatically
     ],
 )
