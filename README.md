@@ -95,6 +95,24 @@ exporter.execute_export()
 - `pymongo` library (install via `pip install pymongo`)
 - `mongoexport` must be installed and accessible in your system's PATH.
 
+# Extracts to Json 
+![mongo_db_json](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongo_db_json.png)
+
+# Extracts to CSV 
+![mongo_db_csv](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongo_db_csv.png)
+
+# Extracts to Json List
+![mongo_db_json_list](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongo_db_json_list.png)
+
+# Extracts to Json Pretty
+![mongo_db_json_pretty](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongo_db_json_pretty.png)
+
+# Restore Collection Using Json file
+![mongodb_restore_1](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongodb_restore_1.png)
+![mongodb_restore_2](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongodb_restore_2.png)
+![mongodb_restore_3](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongodb_restore_3.png)
+![mongodb_restore_4](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/mongodb_restore_4.png)
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
