@@ -49,9 +49,39 @@ pip install mongodb-backup-exporter
 
    - **Linux**: You can install the MongoDB Database Tools using the package manager for your distribution. For example, on Ubuntu, you can do:
 
+   # Validate Linux Version
      ```bash
-     sudo apt-get install mongodb-database-tools
+     uname -a
      ```
+
+     ```bash
+     cat /etc/os-release
+     ```
+   ![linux_version](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/linux_version.png)
+
+   # Install mongodb-database-tools
+
+     ```bash
+     curl -O https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian12-x86_64-100.10.0.tgz && \
+      tar -xvzf mongodb-database-tools-debian12-x86_64-100.10.0.tgz && \
+      cd mongodb-database-tools-debian12-x86_64-100.10.0 && \
+      sudo cp -r bin/* /usr/local/bin/ && \
+      cd .. && \
+      rm -rf mongodb-database-tools-debian12-x86_64-100.10.0 && \
+      rm mongodb-database-tools-debian12-x86_64-100.10.0.tgz
+     ```
+
+   # Verify the version of MongoDB Database Tools
+     ```bash
+     mongoexport --version
+     ```
+
+   # Check the installation directory for MongoDB Database Tools
+     ```bash
+     which mongoexport
+     ```
+
+   ![install_mongodb-database-tools](https://raw.githubusercontent.com/JorgeCardona/mongodb-backup-exporter/refs/heads/main/images/install_mongodb-database-tools.png)
 
      Alternatively, you can download the tools from the [MongoDB official site](https://www.mongodb.com/try/download/database-tools/).
 
