@@ -55,10 +55,12 @@ jobs:
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
-        with:
-          name: python-package  # Artifact name
-          path: build_dist.zip  # Path to the zip file to upload
 
+        with:
+          name: python-package  # Artifact name, this is the name you'll see when retrieving the artifact.
+          path: build_dist.zip  # Path to the zip file to upload as the artifact.
+          retention-days: 30  # Specifies how many days the artifact will be retained before it's automatically deleted.
+          
   publish:
     needs: build
     runs-on: ubuntu-latest
